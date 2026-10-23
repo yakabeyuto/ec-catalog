@@ -4,15 +4,18 @@
  */
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/upload_helper.php';
+require_once __DIR__ . '/../../includes/auth.php';
+
+require_admin();
 
 $errors = [];
 $name = $price = $description = $stock = $category = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name        = trim($_POST['name'] ?? '');
-    $price       = trim($_POST['price'] ?? '');
+    $name         = trim($_POST['name'] ?? '');
+    $price        = trim($_POST['price'] ?? '');
     $description = trim($_POST['description'] ?? '');
-    $stock       = trim($_POST['stock'] ?? '');
+    $stock        = trim($_POST['stock'] ?? '');
     $category    = trim($_POST['category'] ?? '');
 
     if ($name === '')           $errors[] = '商品名を入力してください';
