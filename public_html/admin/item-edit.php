@@ -4,6 +4,9 @@
  */
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/upload_helper.php';
+require_once __DIR__ . '/../../includes/auth.php';
+
+require_admin();
 
 $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
 
@@ -20,13 +23,13 @@ if (!$item) {
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name        = trim($_POST['name'] ?? '');
-    $price       = trim($_POST['price'] ?? '');
+    $name         = trim($_POST['name'] ?? '');
+    $price        = trim($_POST['price'] ?? '');
     $description = trim($_POST['description'] ?? '');
-    $stock       = trim($_POST['stock'] ?? '');
+    $stock        = trim($_POST['stock'] ?? '');
     $category    = trim($_POST['category'] ?? '');
 
-    if ($name === '')         $errors[] = '商品名を入力してください';
+    if ($name === '')        $errors[] = '商品名を入力してください';
     if (!ctype_digit($price)) $errors[] = '価格は0以上の整数で入力してください';
     if (!ctype_digit($stock)) $errors[] = '在庫数は0以上の整数で入力してください';
 

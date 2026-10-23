@@ -1,11 +1,11 @@
 <?php
 /**
  * admin/item-list.php ― 管理者用 商品一覧（CRUDの入口）
- *
- * 注意：この時点ではまだログイン・権限チェックを実装していません。
- * 第9回で require_admin() を先頭に追加し、一般ユーザーがアクセスできないようにします。
  */
 require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../includes/auth.php';
+
+require_admin();
 
 $items = $pdo->query('SELECT id, name, price, stock, category FROM items ORDER BY created_at DESC')->fetchAll();
 ?>

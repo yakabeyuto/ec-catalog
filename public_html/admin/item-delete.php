@@ -3,6 +3,9 @@
  * admin/item-delete.php ― 商品削除（POSTのみ受け付ける）
  */
 require_once __DIR__ . '/../../includes/config.php';
+require_once __DIR__ . '/../../includes/auth.php';
+
+require_admin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: item-list.php');
@@ -27,5 +30,4 @@ $del = $pdo->prepare('DELETE FROM items WHERE id = ?');
 $del->execute([$id]);
 
 header('Location: item-list.php');
-exit;header('Location: item-list.php');
 exit;
