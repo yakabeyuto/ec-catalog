@@ -27,9 +27,27 @@ if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
     $errors['email'] = 'メールアドレスの形式が正しくありません';
 }
 
+// パスワードの強さと、確認用との一致
+if ($password !== '' && mb_strlen($password) < 8) {
+    $errors['password'] = 'パスワードは8文字以上で入力してください';
+}
+if ($password !== $confirm) {
+    $errors['password_confirm'] = 'パスワード（確認）が一致しません';
+}
+ 
+// 重複チェック：ほかのチェックが全部通ったときだけ DB に聞く
+if (!$errors) {
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) {
+        $errors['email'] = 'このメールアドレスは既に登録されています';
+    }
+}
+ 
 // 1つでもあれば、理由を預けて登録画面へ戻す
 if ($errors) {
     $_SESSION['register_errors'] = $errors;
+    $_SESSION['register_old']    = ['name' => $name, 'email' => $email];  // パスワードは戻さない
     header('Location: register.php');
     exit;
 }

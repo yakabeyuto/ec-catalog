@@ -35,3 +35,4 @@ table.admin-table { width: 100%; border-collapse: collapse; background: #fff; }
 table.admin-table th, table.admin-table td { border-bottom: 1px solid #ececec; padding: .6rem; text-align: left; }
 .error { color: #c0392b; background: #fdeceb; padding: .8rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
 .empty-state { color: #8b90a0; padding: 2rem 0; text-align: center; }
+.field-error { color: #c0392b; font-size: .9rem; margin: .3rem 0 0; }
