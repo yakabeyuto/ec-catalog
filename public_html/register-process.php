@@ -34,7 +34,7 @@ if ($password !== '' && mb_strlen($password) < 8) {
 if ($password !== $confirm) {
     $errors['password_confirm'] = 'パスワード（確認）が一致しません';
 }
- 
+
 // 重複チェック：ほかのチェックが全部通ったときだけ DB に聞く
 if (!$errors) {
     $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
@@ -43,7 +43,7 @@ if (!$errors) {
         $errors['email'] = 'このメールアドレスは既に登録されています';
     }
 }
- 
+
 // 1つでもあれば、理由を預けて登録画面へ戻す
 if ($errors) {
     $_SESSION['register_errors'] = $errors;

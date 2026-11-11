@@ -1,4 +1,7 @@
 <?php
+/**
+ * forbidden.php ― 権限が足りないときの案内ページ（第9回・上級）
+ */
 http_response_code(403);
 ?>
 <!DOCTYPE html>

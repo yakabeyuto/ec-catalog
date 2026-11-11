@@ -1,6 +1,9 @@
 <?php
 /**
  * admin/item-list.php ― 管理者用 商品一覧（CRUDの入口）
+ *
+ * 注意：この時点ではまだログイン・権限チェックを実装していません。
+ * 第9回で require_admin() を先頭に追加し、一般ユーザーがアクセスできないようにします。
  */
 require_once __DIR__ . '/../../includes/config.php';
 require_once __DIR__ . '/../../includes/auth.php';
@@ -17,7 +20,10 @@ $items = $pdo->query('SELECT id, name, price, stock, category FROM items ORDER B
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
-    <header><a href="../index.php">Tsuchi-to-Hi</a></header>
+    <header>
+        <a href="../index.php">Tsuchi-to-Hi</a>
+        <a class="btn" style="border: 1px solid; padding: .4rem .8rem;" href="../logout.php">ログアウト</a>
+    </header>
     <main>
         <h1>商品管理</h1>
         <p><a class="btn" href="item-add.php">＋ 新規登録</a></p>

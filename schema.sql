@@ -13,7 +13,7 @@ USE ec_shop;
 -- ------------------------------------------------------------
 -- users：会員情報
 -- role : 'member'（一般会員）/ 'admin'（管理者）※第9回の権限分岐で使用
--- password : この時点ではまだ平文想定（第11回でハッシュ化に対応）
+-- password : 第11回で password_hash() によるハッシュ保存へ変更済み
 -- ------------------------------------------------------------
 CREATE TABLE users (
     id            INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,4 +89,25 @@ CREATE TABLE order_details (
     price         INT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (item_id) REFERENCES items(id)
+);
+
+-- ============================================================
+-- 第8回：ブルートフォース対策（ログイン試行回数の制限）のための拡張
+-- ============================================================
+ALTER TABLE users
+    ADD COLUMN failed_count INT NOT NULL DEFAULT 0 AFTER role,
+    ADD COLUMN locked_until DATETIME NULL AFTER failed_count;
+
+-- ============================================================
+-- 第12回：商品レビュー（XSS の練習用。内容は reviews.sql と同じ）
+-- ============================================================
+CREATE TABLE reviews (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    item_id     INT NOT NULL,
+    user_id     INT NOT NULL,
+    rating      TINYINT NOT NULL,
+    body        TEXT NOT NULL,
+    created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (item_id) REFERENCES items(id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

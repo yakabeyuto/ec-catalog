@@ -9,14 +9,14 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
- 
+
 // 今のページが admin フォルダの中なら、行き先を1つ上（../）から始める
 function app_path(string $file): string
 {
     $inAdmin = basename(dirname($_SERVER['SCRIPT_FILENAME'])) === 'admin';
     return ($inAdmin ? '../' : '') . $file;
 }
- 
+
 // 認証：ログインしていなければ、ログイン画面へ
 function require_login(): void
 {
@@ -26,7 +26,7 @@ function require_login(): void
         exit;
     }
 }
- 
+
 // 認可：ログインしていても、管理者でなければ「権限がありません」の画面へ
 function require_admin(): void
 {

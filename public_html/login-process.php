@@ -30,21 +30,16 @@ if ($user && $user['locked_until'] !== null && strtotime($user['locked_until']) 
 }
 
 // ② いる かつ パスワード一致 → 成功
-//   旧データ（平文）で一致した場合は、その場でハッシュ化し直す（移行）
-$plainMatch = ($user && $password === $user['password']);
-if ($user && (password_verify($password, $user['password']) || $plainMatch)) {
-    if ($plainMatch) {
-        $rehash = $pdo->prepare('UPDATE users SET password = ? WHERE id = ?');
-        $rehash->execute([password_hash($password, PASSWORD_DEFAULT), $user['id']]);
-    }
+if ($user && password_verify($password, $user['password'])) {
     $reset = $pdo->prepare('UPDATE users SET failed_count = 0, locked_until = NULL WHERE id = ?');
     $reset->execute([$user['id']]);
- 
+
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['role']    = $user['role'];
     header('Location: mypage.php');
     exit;
 }
+
 // ④ 上級：いる人だけ失敗回数を+1。5回目でロック
 if ($user) {
     $newCount  = $user['failed_count'] + 1;
