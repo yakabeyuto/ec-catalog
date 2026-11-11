@@ -25,7 +25,6 @@ if ($image) {
     }
 }
 
-// items テーブルから該当行を DELETE する（必ずプレースホルダを使うこと）
 $del = $pdo->prepare('DELETE FROM items WHERE id = ?');
 $del->execute([$id]);
 
