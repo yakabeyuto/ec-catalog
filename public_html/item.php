@@ -19,6 +19,15 @@ if (!$item) {
     echo '商品が見つかりませんでした。<a href="items.php">一覧に戻る</a>';
     exit;
 }
+
+// お気に入り済みかどうか（未ログインなら false）
+// ※ テーブル名 favorites / 列名 user_id, item_id は仮。favorite-toggle.php に合わせて直す。
+$isFavorite = false;
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare('SELECT 1 FROM favorites WHERE user_id = ? AND item_id = ?');
+    $stmt->execute([(int) $_SESSION['user_id'], (int) $item['id']]);
+    $isFavorite = (bool) $stmt->fetchColumn();
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -30,28 +39,31 @@ if (!$item) {
 <body>
     <header><a href="index.php">Tsuchi-to-Hi</a></header>
     <main>
-<?php if (isset($_SESSION['cart_message'])): ?>
-<p role="status"><?= htmlspecialchars($_SESSION['cart_message'], ENT_QUOTES, 'UTF-8') ?></p>
-<?php unset($_SESSION['cart_message']); endif; ?>
+        <?php if (isset($_SESSION['cart_message'])): ?>
+            <p role="status"><?= htmlspecialchars($_SESSION['cart_message'], ENT_QUOTES, 'UTF-8') ?></p>
+        <?php unset($_SESSION['cart_message']); endif; ?>
+
         <p><a href="items.php">← 商品一覧に戻る</a></p>
         <img src="<?= $item['image'] ? 'uploads/items/' . htmlspecialchars($item['image']) : 'https://placehold.co/400x260' ?>"
              alt="" style="max-width:100%; border-radius:8px;">
         <h1><?= htmlspecialchars($item['name']) ?></h1>
+
+        <form action="favorite-toggle.php" method="post">
+            <input type="hidden" name="item_id" value="<?= (int) $item['id'] ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+            <button><?= $isFavorite ? '♥ お気に入り済み（解除）' : '♡ お気に入りに登録' ?></button>
+        </form>
+
         <p class="price">¥<?= number_format($item['price']) ?></p>
         <p><?= nl2br(htmlspecialchars($item['description'] ?? '')) ?></p>
         <p>在庫：<?= (int) $item['stock'] ?>点</p>
 
-        <!--
-            「カートに入れる」ボタンは第14回でカート機能を実装するまでは
-            仮のリンクです。ログイン機能（第7〜9回）も未実装のため、
-            ここでは表示のみにとどめています。
-        -->
         <form action="cart-insert.php" method="post">
-    <input type="hidden" name="item_id" value="<?= (int) $item['id'] ?>">
-    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
-    <button>カートに入れる</button>
-</form>
-<p><a href="cart.php">カートを見る</a></p>
+            <input type="hidden" name="item_id" value="<?= (int) $item['id'] ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+            <button>カートに入れる</button>
+        </form>
+        <p><a href="cart.php">カートを見る</a></p>
     </main>
 </body>
 </html>
