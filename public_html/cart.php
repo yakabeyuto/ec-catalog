@@ -101,6 +101,10 @@ foreach ($cartItems as $row) {
             </table>
         <?php endif; ?>
         <h2>合計 <?= number_format($total) ?>円</h2>
+        <?php if ($cartItems): ?>
+    <p><a href="checkout.php">購入確認へ</a></p>
+<?php endif; ?>
     </main>
+    
 </body>
 </html>
